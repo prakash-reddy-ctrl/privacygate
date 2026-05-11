@@ -639,8 +639,8 @@
         <div class="stat-label">Entity types</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value">${Math.round((1 - data.sanitized_text.length / original.length) * 100) || 0}%</div>
-        <div class="stat-label">Data masked</div>
+        <div class="stat-value">${Object.values(data.entity_map).reduce((s,e)=>s+e.original.length,0)}</div>
+        <div class="stat-label">Chars protected</div>
       </div>
       <div class="stat-card">
         <div class="stat-value" style="color:var(--teal);font-size:1.1rem">✓ Safe</div>
