@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrivacyGateAI — Live Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #1D9E75;
+      --teal-light: #E1F5EE;
+      --teal-border: #5DCAA5;
+      --teal-dark: #0F6E56;
+      --red-light: #FCEBEB;
+      --red-border: #F09595;
+      --red-text: #A32D2D;
+      --text: #1a1a1a;
+      --text-muted: #666;
+      --text-hint: #999;
+      --bg: #ffffff;
+      --bg-surface: #f7f7f5;
+      --bg-surface2: #f0efeb;
+      --border: rgba(0,0,0,0.1);
+      --border-med: rgba(0,0,0,0.18);
+      --radius: 10px;
+      --radius-lg: 14px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-surface);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    nav {
+      background: var(--bg);
+      border-bottom: 0.5px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+    }
+
+    .nav-badge {
+      background: var(--teal-light);
+      color: var(--teal-dark);
+      border: 0.5px solid var(--teal-border);
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero h1 span { color: var(--teal); }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .demo-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-title .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #E24B4A; }
+    .dot-amber { background: #EF9F27; }
+    .dot-green { background: var(--teal); }
+
+    .card-body { padding: 1.25rem; }
+
+    .sample-btns {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+
+    .sample-btn {
+      background: var(--bg-surface);
+      border: 0.5px solid var(--border-med);
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .sample-btn:hover {
+      background: var(--teal-light);
+      color: var(--teal-dark);
+      border-color: var(--teal-border);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      border: 0.5px solid var(--border-med);
+      border-radius: var(--radius);
+      padding: 0.875rem 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg-surface);
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    textarea:focus { border-color: var(--teal); background: var(--bg); }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.875rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .char-count {
+      font-size: 0.75rem;
+      color: var(--text-hint);
+    }
+
+    .btn-sanitize {
+      background: var(--teal);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn-sanitize:hover { background: var(--teal-dark); }
+    .btn-sanitize:active { transform: scale(0.98); }
+    .btn-sanitize:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 580px) { .results-grid { grid-template-columns: 1fr; } }
+
+    .result-box {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .result-header {
+      padding: 0.75rem 1rem;
+      border-bottom: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .result-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .label-before { color: var(--red-text); }
+    .label-after { color: var(--teal-dark); }
+
+    .result-body {
+      padding: 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      line-height: 1.8;
+      min-height: 80px;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .placeholder-token {
+      background: var(--teal-light);
+      color: var(--teal-dark);
+      border: 0.5px solid var(--teal-border);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .pii-highlight {
+      background: var(--red-light);
+      color: var(--red-text);
+      border: 0.5px solid var(--red-border);
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.875rem 1rem;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--teal);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .entity-list {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .entity-list-header {
+      padding: 0.75rem 1rem;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 0.72rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+    }
+
+    .entity-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.625rem 1rem;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 0.82rem;
+    }
+
+    .entity-row:last-child { border-bottom: none; }
+
+    .entity-type-badge {
+      background: var(--teal-light);
+      color: var(--teal-dark);
+      border: 0.5px solid var(--teal-border);
+      padding: 2px 8px;
+      border-radius: 100px;
+      font-size: 0.68rem;
+      font-weight: 500;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .entity-original {
+      color: var(--red-text);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+    }
+
+    .entity-placeholder {
+      color: var(--teal-dark);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+    }
+
+    .confidence-bar {
+      width: 60px;
+      height: 4px;
+      background: var(--bg-surface2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .confidence-fill {
+      height: 100%;
+      background: var(--teal);
+      border-radius: 2px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-hint);
+      font-size: 0.875rem;
+    }
+
+    .empty-state .empty-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.3;
+    }
+
+    .error-msg {
+      background: var(--red-light);
+      border: 0.5px solid var(--red-border);
+      color: var(--red-text);
+      padding: 0.875rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.82rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .api-note {
+      background: var(--bg-surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.875rem 1rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .api-note code {
+      background: var(--bg-surface2);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text);
+    }
+
+    .hidden { display: none !important; }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--text-hint);
+      font-size: 0.75rem;
+      border-top: 0.5px solid var(--border);
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">
+    <span class="logo-dot"></span>
+    PrivacyGate<span style="color:var(--teal)">AI</span>
+  </a>
+  <span class="nav-badge">Live Demo</span>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>See your data <span>masked</span> in real time</h1>
+    <p>Paste any text containing sensitive information. Watch PrivacyGateAI detect and replace it before it ever reaches an AI model.</p>
+  </div>
+
+  <div class="demo-card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-amber"></span>
+        <span class="dot dot-green"></span>
+        Input — your raw text
+      </div>
+      <div style="font-size:0.72rem; color:var(--text-hint);">Try a sample below</div>
+    </div>
+    <div class="card-body">
+      <div class="sample-btns">
+        <button class="sample-btn" onclick="loadSample('legal')">Legal contract</button>
+        <button class="sample-btn" onclick="loadSample('medical')">Medical note</button>
+        <button class="sample-btn" onclick="loadSample('finance')">Finance report</button>
+        <button class="sample-btn" onclick="loadSample('support')">Support ticket</button>
+      </div>
+      <textarea id="input-text" placeholder="Paste any text with sensitive data here...&#10;&#10;e.g. Contact John Smith at john@acme.com, SSN 078-05-1120, card 4532015112830366"></textarea>
+      <div class="action-row">
+        <span class="char-count" id="char-count">0 characters</span>
+        <button class="btn-sanitize" onclick="sanitize()" id="sanitize-btn">
+          <div class="spinner" id="spinner"></div>
+          <span id="btn-text">Sanitize text</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="error-msg" id="error-msg"></div>
+
+  <div id="results-section" class="hidden">
+
+    <div class="stats-row" id="stats-row"></div>
+
+    <div class="results-grid">
+      <div class="result-box">
+        <div class="result-header">
+          <div class="result-label label-before">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4.5" stroke="#E24B4A"/></svg>
+            Before gateway
+          </div>
+        </div>
+        <div class="result-body" id="before-text"></div>
+      </div>
+      <div class="result-box">
+        <div class="result-header">
+          <div class="result-label label-after">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4.5" stroke="#1D9E75"/></svg>
+            Sent to AI model
+          </div>
+          <button onclick="copyResult()" style="background:none;border:none;cursor:pointer;font-size:0.72rem;color:var(--teal);font-family:'DM Sans',sans-serif;" id="copy-btn">copy</button>
+        </div>
+        <div class="result-body" id="after-text"></div>
+      </div>
+    </div>
+
+    <div class="entity-list" id="entity-list">
+      <div class="entity-list-header">Detected entities</div>
+      <div id="entity-rows"></div>
+    </div>
+
+  </div>
+
+  <div id="empty-state" class="empty-state">
+    <div class="empty-icon">🔒</div>
+    <div>Enter text above and click Sanitize to see PII detection in action</div>
+  </div>
+
+  <div class="api-note">
+    Powered by your live API at <code>web-production-86d465.up.railway.app</code> · No data is stored
+  </div>
+</main>
+
+<footer>
+  PrivacyGateAI · Privacy middleware for AI · Built for teams using AI with confidential data
+</footer>
+
+<script>
+  const API_URL = 'https://web-production-86d465.up.railway.app';
+
+  const SAMPLES = {
+    legal: `Please review this contract for Sarah Johnson (sarah.j@lawfirm.com). Her client is Nexus Technologies LLC. The settlement amount is $2.5 million. Client SSN: 078-05-1120. Payment to account 4532015112830366. Contact her at +1 (415) 555-0192.`,
+    medical: `Patient: Michael Chen, DOB: 03/14/1985. MRN: MRN#A483921. Referred by Dr. Patel at City General Hospital. Insurance ID: BC-44821-X. Contact: mchen@gmail.com, phone 212-555-8834. Prescribed: Metformin 500mg. Next appointment: June 12.`,
+    finance: `Q3 report for Apex Capital Group. Client portfolio managed by David Rivera (d.rivera@apexcap.com). Account balance: $4.2 million. Wire transfer from IBAN GB29NWBK60161331926819. Tax ID: 078-44-9821. Trading server: 10.0.44.21.`,
+    support: `Ticket from angry customer James Williams. Email: j.williams@company.org. He says his credit card 5105105105105100 was charged twice for $299. His account API key is sk-prod-xK92mNqL8vPpRt3wYzAb7cD. Called from +44 7911 123456.`
+  };
+
+  const textarea = document.getElementById('input-text');
+  const charCount = document.getElementById('char-count');
+
+  textarea.addEventListener('input', () => {
+    charCount.textContent = `${textarea.value.length} characters`;
+  });
+
+  function loadSample(type) {
+    textarea.value = SAMPLES[type];
+    charCount.textContent = `${textarea.value.length} characters`;
+    textarea.focus();
+  }
+
+  function setLoading(loading) {
+    const btn = document.getElementById('sanitize-btn');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btn-text');
+    btn.disabled = loading;
+    spinner.style.display = loading ? 'block' : 'none';
+    btnText.textContent = loading ? 'Analyzing...' : 'Sanitize text';
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function hideError() {
+    document.getElementById('error-msg').style.display = 'none';
+  }
+
+  function highlightPII(text, entities) {
+    let result = text;
+    const sorted = Object.values(entities).sort((a, b) => b.original.length - a.original.length);
+    for (const entity of sorted) {
+      const escaped = entity.original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      result = result.replace(new RegExp(escaped, 'g'),
+        `<span class="pii-highlight">${entity.original}</span>`);
+    }
+    return result;
+  }
+
+  function renderSanitized(text) {
+    return text.replace(/\[([A-Z_]+_\d+)\]/g,
+      `<span class="placeholder-token">[$1]</span>`);
+  }
+
+  async function sanitize() {
+    const text = textarea.value.trim();
+    if (!text) { textarea.focus(); return; }
+
+    hideError();
+    setLoading(true);
+
+    try {
+      const res = await fetch(`${API_URL}/v1/sanitize`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
+      const data = await res.json();
+
+      renderResults(text, data);
+    } catch (err) {
+      showError(`Could not reach the API. Make sure the Railway server is running. (${err.message})`);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function renderResults(original, data) {
+    document.getElementById('empty-state').classList.add('hidden');
+    document.getElementById('results-section').classList.remove('hidden');
+
+    const statsRow = document.getElementById('stats-row');
+    statsRow.innerHTML = `
+      <div class="stat-card">
+        <div class="stat-value">${data.entity_count}</div>
+        <div class="stat-label">PII items found</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${data.entity_types.length}</div>
+        <div class="stat-label">Entity types</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">${Math.round((1 - data.sanitized_text.length / original.length) * 100) || 0}%</div>
+        <div class="stat-label">Data masked</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--teal);font-size:1.1rem">✓ Safe</div>
+        <div class="stat-label">AI-ready text</div>
+      </div>
+    `;
+
+    document.getElementById('before-text').innerHTML =
+      data.entity_count > 0 ? highlightPII(original, data.entity_map) : original;
+
+    document.getElementById('after-text').innerHTML =
+      renderSanitized(data.sanitized_text);
+
+    const entityRows = document.getElementById('entity-rows');
+    if (data.entity_count === 0) {
+      entityRows.innerHTML = `<div style="padding:1rem;text-align:center;color:var(--text-hint);font-size:0.82rem;">No PII detected — text is safe to send</div>`;
+    } else {
+      entityRows.innerHTML = Object.entries(data.entity_map).map(([placeholder, entity]) => `
+        <div class="entity-row">
+          <span class="entity-type-badge">${entity.entity_type}</span>
+          <span class="entity-original">${entity.original}</span>
+          <span style="color:var(--text-hint);font-size:0.75rem;">→</span>
+          <span class="entity-placeholder">${placeholder}</span>
+          <div class="confidence-bar" title="${Math.round(entity.confidence * 100)}% confidence">
+            <div class="confidence-fill" style="width:${Math.round(entity.confidence * 100)}%"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function copyResult() {
+    const sanitized = document.getElementById('after-text').innerText;
+    navigator.clipboard.writeText(sanitized).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = 'copied!';
+      setTimeout(() => btn.textContent = 'copy', 1500);
+    });
+  }
+</script>
+</body>
+</html>
